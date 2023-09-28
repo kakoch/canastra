@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Canastra</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="game">
+        <div class="player">
+            <h2>Jogador 1</h2>
+            <div class="hand" id="player1Hand"></div>
+            <div class="discard" id="discardPile1"></div>
+            <div class="discard" id="deadPile1"></div>
+        </div>
+        <div class="draw">
+            <h2>Monte de Compra</h2>
+            <div class="draw-count" id="drawCount">Cartas Restantes: 60</div>
+            <button id="drawCard">Comprar Carta</button>
+        </div>
+        
+        <div class="trash">
+            <h2>Lixo</h2>
+            <div class="discard" id="trashPile"></div>
+        </div>
+        <div class="player">
+            <h2>Jogador 2</h2>
+            <div class="hand" id="player2Hand"></div>
+            <div class="discard" id="discardPile2"></div>
+            <div class="discard" id="deadPile2"></div>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
