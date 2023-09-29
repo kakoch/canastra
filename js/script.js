@@ -24,7 +24,7 @@ function shuffleDeck(deck) {
 }
 
 shuffleDeck(deck);
-
+console.log(deck)
 const player1Hand = document.getElementById('player1Hand');
 const player2Hand = document.getElementById('player2Hand');
 const drawCardButton = document.getElementById('drawCard');
@@ -42,9 +42,11 @@ drawCardButton.addEventListener('click', () => {
 
     if (currentPlayer === 1) {
         player1Hand.appendChild(cardElement);
+        sortPlayerHand(player1Hand); // Ordene as cartas do jogador 1
         currentPlayer = 2;
     } else {
         player2Hand.appendChild(cardElement);
+        sortPlayerHand(player2Hand); // Ordene as cartas do jogador 2
         currentPlayer = 1;
     }
 
@@ -55,29 +57,37 @@ drawCardButton.addEventListener('click', () => {
 let remainingCards = 60; // ou o número desejado de cartas no monte de compra
 
 function createCardElement(card) {
+    let number ;
+    let classeNaipe ;
+    if (card.length > 2) {
+        number = card.substring(0, 2);
+    } else {
+        number = card.substring(0, 1);
+    }
+    const naipe = card.substring(card.length - 1);
+    if(naipe == '♥' || naipe == '♦'){
+        classeNaipe = 'naipeRed';
+    }else{
+        classeNaipe = 'naipeBlack';
+    }
     const cardElement = document.createElement('div');
     cardElement.classList.add('card');
-    cardElement.textContent = card;
+    cardElement.classList.add(naipe.toLowerCase()); // Adicione classe para o naipe
+    const cardImage = `
+                <div class="corner top">
+                    <span class="number ${classeNaipe}">${number}</span>
+                    <span class="suit ${classeNaipe}">${naipe}</span>
+                </div>
+                <div class="center ${classeNaipe}">${naipe}</div>
+                <div class="corner bottom">
+                    <span class="number ${classeNaipe}">${number}</span>
+                    <span class="suit ${classeNaipe}">${naipe}</span>
+                </div>
+            `;
+    cardElement.innerHTML = cardImage;
     return cardElement;
 }
 
-drawCardButton.addEventListener('click', () => {
-    if (deck.length === 0) {
-        alert('O baralho está vazio!');
-        return;
-    }
-
-    const card = deck.pop();
-    const cardElement = createCardElement(card);
-
-    if (currentPlayer === 1) {
-        player1Hand.appendChild(cardElement);
-        currentPlayer = 2;
-    } else {
-        player2Hand.appendChild(cardElement);
-        currentPlayer = 1;
-    }
-});
 function checkEmptyHand(playerHand, deadPile) {
     if (playerHand.children.length === 0 && deadPile.children.length > 0) {
         // Todas as cartas do jogador estão no "morto," transferir para a mão
@@ -103,4 +113,31 @@ for (let i = 0; i < 11; i++) {
 
     discardPile1.appendChild(createCardElement(deadCard1));
     discardPile2.appendChild(createCardElement(deadCard2));
+}
+function sortPlayerHand(playerHand) {
+    const cards = Array.from(playerHand.children);
+    cards.sort((a, b) => {
+        const naipeA = a.querySelector('.suit').textContent;
+        const naipeB = b.querySelector('.suit').textContent;
+        const numberA = a.querySelector('.number').textContent;
+        const numberB = b.querySelector('.number').textContent;
+        
+        if (naipeA !== naipeB) {
+            // Ordene pelo naipe primeiro
+            return naipeA.localeCompare(naipeB);
+        } else {
+            // Se o naipe for o mesmo, ordene pelo número
+            return numberA.localeCompare(numberB);
+        }
+    });
+
+    // Remova todas as cartas da mão do jogador
+    while (playerHand.firstChild) {
+        playerHand.removeChild(playerHand.firstChild);
+    }
+
+    // Adicione as cartas ordenadas de volta à mão do jogador
+    for (const card of cards) {
+        playerHand.appendChild(card);
+    }
 }
