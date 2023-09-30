@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    background-image: url(../img/mesa.jpg);
 }
 
 .game {
@@ -11,12 +12,14 @@ body {
 
 .player {
     border: 1px solid #333;
+    color: white;
     padding: 10px;
     width: 300px;
 }
 
 .hand {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
@@ -37,6 +40,7 @@ body {
     position: relative;
     font-family: Arial, sans-serif;
     font-size: 24px;
+    background-color: white;
 }
 
 .corner {
@@ -102,7 +106,7 @@ body {
 
 /* Estilos para o monte de compra */
 #drawPile {
-    
+
     border: 1px solid #000;
     margin: 1px;
     padding: 1px;
@@ -111,18 +115,23 @@ body {
     /* Cor de fundo cinza para o monte de compra */
     font-weight: bold;
 }
+
 .card-back {
     border-radius: 5px;
     border: 1px solid #000;
     margin: 1px;
     padding: 1px;
-    width: 60px; /* Largura da carta */
-    height: 80px; /* Altura da carta */
-    background: 
+    width: 60px;
+    /* Largura da carta */
+    height: 80px;
+    /* Altura da carta */
+    background-image: url(../img/carta-tras-blue-p.png);
+    /*background: 
         linear-gradient(45deg, transparent 10%, #007BFF 10%, #007BFF 20%, transparent 20%),
-        linear-gradient(120deg, transparent 10%, #007BFF 10%, #007BFF 20%, transparent 20%);
-    background-size: 5px 5px; /* Tamanho do padrão */
-    position: relative; /* Posição relativa para conteúdo adicional */
+        linear-gradient(120deg, transparent 10%, #007BFF 10%, #007BFF 20%, transparent 20%);*/
+    background-size: 60px 80px;
+    position: relative;
+    /* Posição relativa para conteúdo adicional */
 }
 
 /* Conteúdo adicional na parte de trás da carta (por exemplo, um logotipo) */
@@ -135,15 +144,20 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .draw {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     flex-direction: column;
+    color: white;
 }
-.trash{
 
+.trash {
+    font-size: 12px;
+    color: white;
 }
+
 .mesa {
     display: flex;
     align-items: center;
@@ -152,9 +166,16 @@ body {
 }
 
 
-.naipeRed{
+.naipeRed {
     color: red;
 }
-.naipeBlack{
+
+.naipeBlack {
     color: black;
 }
+
+.hand .card {
+    margin-left: -35px; /* Ajuste o valor conforme necessário para controlar o espaçamento horizontal */
+    position: relative;
+  }
+  

@@ -54,10 +54,18 @@ drawCardButton.addEventListener("click", () => {
     player1Hand.appendChild(cardElement);
     sortPlayerHand(player1Hand); // Ordene as cartas do jogador 1
     currentPlayer = 2;
+    const player1Cards = document.querySelectorAll("#player1Hand .card");
+    player1Cards.forEach((card, index) => {
+      card.style.marginLeft = `${index * 30}px`; // Ajuste o valor conforme necessário
+    });
   } else {
     player2Hand.appendChild(cardElement);
     sortPlayerHand(player2Hand); // Ordene as cartas do jogador 2
     currentPlayer = 1;
+    const player2Cards = document.querySelectorAll("#player2Hand .card");
+    player2Cards.forEach((card, index) => {
+      card.style.marginLeft = `${index * 30}px`; // Ajuste o valor conforme necessário
+    });
   }
 
   remainingCards--; // Reduza a contagem de cartas disponíveis
@@ -131,18 +139,19 @@ for (let i = 0; i < 11; i++) {
 }
 function sortPlayerHand(playerHand) {
   const cards = Array.from(playerHand.children);
+
   cards.sort((a, b) => {
     const naipeA = a.querySelector(".suit").textContent;
     const naipeB = b.querySelector(".suit").textContent;
-    const numberA = a.querySelector(".number").textContent;
-    const numberB = b.querySelector(".number").textContent;
+    const numberA = getCardValue(a.querySelector(".number").textContent);
+    const numberB = getCardValue(b.querySelector(".number").textContent);
 
     if (naipeA !== naipeB) {
       // Ordene pelo naipe primeiro
       return naipeA.localeCompare(naipeB);
     } else {
       // Se o naipe for o mesmo, ordene pelo número
-      return numberA.localeCompare(numberB);
+      return numberA - numberB;
     }
   });
 
@@ -154,5 +163,22 @@ function sortPlayerHand(playerHand) {
   // Adicione as cartas ordenadas de volta à mão do jogador
   for (const card of cards) {
     playerHand.appendChild(card);
+  }
+}
+function getCardValue(cardNumber) {
+  // Converte o número da carta para um valor numérico
+  switch (cardNumber) {
+    case "A":
+      return 14;
+    case "K":
+      return 13;
+    case "Q":
+      return 12;
+    case "J":
+      return 11;
+    case "10":
+      return 10;
+    default:
+      return parseInt(cardNumber);
   }
 }
