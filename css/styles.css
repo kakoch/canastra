@@ -6,32 +6,26 @@ body {
 
 .game {
     display: flex;
-    justify-content: space-around;
     margin-top: 20px;
+    flex-direction: row;
+    align-items: stretch;
 }
 
 .player {
-    border: 1px solid #333;
+    border: 2px solid white;
+    border-radius: 10px;
     color: white;
     padding: 10px;
-    width: 300px;
+    width: 500px;
 }
 
 .hand {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    padding-left: 35px;
 }
 
-/*
-.card {
-    border: 1px solid #ccc;
-    margin: 5px;
-    padding: 5px;
-    width: 20px;
-    height: 20px;
-}
-*/
 .card {
     width: 60px;
     height: 80px;
@@ -89,6 +83,20 @@ body {
 }
 
 /* Adicione estilos para o "morto" dos jogadores */
+.trash {
+    font-size: 12px;
+    color: white;
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+    height: 200px;
+}
+.discard-trash {
+    border: 1px solid #ccc;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 35px;
+}
 .discard {
     border: 1px solid #ccc;
     margin: 5px;
@@ -112,7 +120,6 @@ body {
     padding: 1px;
     text-align: center;
     background-color: #f0f0f0;
-    /* Cor de fundo cinza para o monte de compra */
     font-weight: bold;
 }
 
@@ -122,21 +129,13 @@ body {
     margin: 1px;
     padding: 1px;
     width: 60px;
-    /* Largura da carta */
     height: 80px;
-    /* Altura da carta */
     background-image: url(../img/carta-tras-blue-p.png);
-    /*background: 
-        linear-gradient(45deg, transparent 10%, #007BFF 10%, #007BFF 20%, transparent 20%),
-        linear-gradient(120deg, transparent 10%, #007BFF 10%, #007BFF 20%, transparent 20%);*/
     background-size: 60px 80px;
     position: relative;
-    /* Posição relativa para conteúdo adicional */
 }
 
-/* Conteúdo adicional na parte de trás da carta (por exemplo, um logotipo) */
 .card-back::before {
-
     font-size: 12px;
     color: white;
     position: absolute;
@@ -153,10 +152,7 @@ body {
     color: white;
 }
 
-.trash {
-    font-size: 12px;
-    color: white;
-}
+
 
 .mesa {
     display: flex;
@@ -175,7 +171,19 @@ body {
 }
 
 .hand .card {
-    margin-left: -35px; /* Ajuste o valor conforme necessário para controlar o espaçamento horizontal */
+    margin-left: -35px;
+    /* Ajuste o valor conforme necessário para controlar o espaçamento horizontal */
     position: relative;
-  }
-  
+}
+
+.card.highlighted {
+    transform: translateY(-10px);
+    /* Move a carta 10px acima quando destacada */
+    /*z-index: 1;
+    /* Coloca a carta acima das outras quando destacada */
+    cursor: pointer;
+    /* Muda o cursor para indicar que a carta é clicável */
+}
+.left35{
+    margin-left: -35px;
+}

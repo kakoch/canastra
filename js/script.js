@@ -35,11 +35,14 @@ function shuffleDeck(deck) {
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
 }
+
+let currentPlayer = 1;
 const player1Hand = document.getElementById("player1Hand");
 const player2Hand = document.getElementById("player2Hand");
 const drawCardButton = document.getElementById("drawCard");
+let player1HasTakenFromTrash = false;
+let player2HasTakenFromTrash = false;
 
-let currentPlayer = 1;
 const drawCount = document.getElementById("drawCount"); // Seleciona o elemento de contagem
 drawCardButton.addEventListener("click", () => {
   if (remainingCards === 0) {
@@ -47,30 +50,36 @@ drawCardButton.addEventListener("click", () => {
     return;
   }
 
-  const card = deck.pop();
-  const cardElement = createCardElement(card);
-
   if (currentPlayer === 1) {
-    player1Hand.appendChild(cardElement);
-    sortPlayerHand(player1Hand); // Ordene as cartas do jogador 1
-    currentPlayer = 2;
-    const player1Cards = document.querySelectorAll("#player1Hand .card");
-    player1Cards.forEach((card, index) => {
-      card.style.marginLeft = `${index * 30}px`; // Ajuste o valor conforme necessário
-    });
+    if (!player1HasTakenFromTrash) { // Verifique se o jogador 1 não pegou cartas do lixo neste turno
+      // Jogador 1 pode comprar uma carta
+      const card = deck.pop();
+      const cardElement = createCardElement(card);
+      player1Hand.appendChild(cardElement);
+      sortPlayerHand(player1Hand); // Ordene as cartas do jogador 1
+    } else {
+      alert("Você já pegou cartas do lixo neste turno.");
+    }
   } else {
-    player2Hand.appendChild(cardElement);
-    sortPlayerHand(player2Hand); // Ordene as cartas do jogador 2
-    currentPlayer = 1;
-    const player2Cards = document.querySelectorAll("#player2Hand .card");
-    player2Cards.forEach((card, index) => {
-      card.style.marginLeft = `${index * 30}px`; // Ajuste o valor conforme necessário
-    });
+    if (!player2HasTakenFromTrash) { // Verifique se o jogador 2 não pegou cartas do lixo neste turno
+      // Jogador 2 pode comprar uma carta
+      const card = deck.pop();
+      const cardElement = createCardElement(card);
+      player2Hand.appendChild(cardElement);
+      sortPlayerHand(player2Hand); // Ordene as cartas do jogador 2
+    } else {
+      alert("Você já pegou cartas do lixo neste turno.");
+    }
   }
 
   remainingCards--; // Reduza a contagem de cartas disponíveis
   drawCount.textContent = `Cartas Restantes: ${remainingCards}`; // Atualize o texto exibido
+
+  // Alternar para o próximo jogador após a compra
+ // currentPlayer = currentPlayer === 1 ? 2 : 1;
+ // alert(`Turno do Jogador ${currentPlayer}`);
 });
+
 // Defina a contagem inicial
 let remainingCards = 60; // ou o número desejado de cartas no monte de compra
 
@@ -182,3 +191,113 @@ function getCardValue(cardNumber) {
       return parseInt(cardNumber);
   }
 }
+// Adicione um evento de clique às cartas da mão do jogador 1
+let selectedCardsPlayer1 = []; // Array para armazenar as cartas selecionadas do jogador 1
+let selectedCardsPlayer2 = []; // Array para armazenar as cartas selecionadas do jogador 2
+
+const player1Cards = document.querySelectorAll("#player1Hand .card");
+player1Cards.forEach((card) => {
+  card.addEventListener("click", () => {
+    if (currentPlayer === 1) {
+      // Verifique o jogador atual
+      if (!card.classList.contains("inTrash")) { // Verifique se a carta não está no lixo
+        if (selectedCardsPlayer1.includes(card)) {
+          // Se a carta já estiver selecionada, remova o destaque dela
+          card.classList.remove("highlighted");
+          selectedCardsPlayer1 = selectedCardsPlayer1.filter((selectedCard) => selectedCard !== card);
+        } else {
+          // Se a carta não estiver selecionada, destaque ela e adicione ao array de cartas selecionadas do jogador 1
+          card.classList.add("highlighted");
+          card.classList.add("left35");
+          selectedCardsPlayer1.push(card);
+        }
+      }
+    }
+  });
+});
+
+// Adicione um evento de clique às cartas da mão do jogador 2
+const player2Cards = document.querySelectorAll("#player2Hand .card");
+player2Cards.forEach((card) => {
+  card.addEventListener("click", () => {
+    if (currentPlayer === 2) {
+      // Verifique o jogador atual
+      if (!card.classList.contains("inTrash")) { // Verifique se a carta não está no lixo
+        if (selectedCardsPlayer2.includes(card)) {
+          // Se a carta já estiver selecionada, remova o destaque dela
+          card.classList.remove("highlighted");
+          selectedCardsPlayer2 = selectedCardsPlayer2.filter((selectedCard) => selectedCard !== card);
+        } else {
+          // Se a carta não estiver selecionada, destaque ela e adicione ao array de cartas selecionadas do jogador 2
+          card.classList.add("highlighted");
+          card.classList.add("left35");
+          selectedCardsPlayer2.push(card);
+        }
+      }
+    }
+  });
+});
+
+const endTurnButton = document.getElementById("endTurn");
+endTurnButton.addEventListener("click", () => {
+  // Verifique se há apenas uma carta selecionada para descarte
+
+  selectedCards = []; // Limpe o array de cartas selecionadas
+
+  // Alternar para o próximo jogador após o descarte
+  currentPlayer = currentPlayer === 1 ? 2 : 1;
+});
+
+
+const discardButton = document.getElementById("discardButton");
+discardButton.addEventListener("click", () => {
+  const selectedCards = currentPlayer === 1 ? selectedCardsPlayer1 : selectedCardsPlayer2; // Escolha a array de cartas selecionadas com base no jogador atual
+
+  if (selectedCards.length !== 1) {
+    alert("Você só pode jogar uma carta no lixo de cada vez.");
+    return;
+  }
+
+  const trashPile = document.getElementById("trashPile");
+  const selectedCard = selectedCards[0]; // Pega a única carta selecionada
+
+  // Verifique se é o turno do jogador atual
+  if ((currentPlayer === 1 && selectedCard.parentElement === player1Hand) || (currentPlayer === 2 && selectedCard.parentElement === player2Hand)) {
+    trashPile.appendChild(selectedCard); // Mova a carta selecionada para o lixo
+    selectedCard.classList.remove("highlighted"); // Remova o destaque da carta
+    selectedCard.classList.add("inTrash"); // Adicione a classe para indicar que a carta está no lixo
+    selectedCards.length = 0; // Limpe o array de cartas selecionadas
+
+    // Alternar para o próximo jogador após o descarte
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    alert(`Turno do Jogador ${currentPlayer}`);
+  } else {
+    alert("Você deve esperar o seu turno");
+  }
+});
+
+const takeFromTrashButton = document.getElementById("takeFromTrashButton");
+takeFromTrashButton.addEventListener("click", () => {
+  const trashPile = document.getElementById("trashPile");
+  const discardedCards = Array.from(trashPile.children);
+
+  if (discardedCards.length === 0) {
+    alert("Não há cartas no lixo.");
+    return;
+  }
+
+  discardedCards.forEach((card) => {
+    // Verifique o jogador atual e mova as cartas do lixo para a mão dele
+    if (currentPlayer === '1') {
+      player1Hand.appendChild(card);
+      player1HasTakenFromTrash = true;
+    } else {
+      player2Hand.appendChild(card);
+      player2HasTakenFromTrash = true;
+    }
+    card.classList.remove("highlighted"); // Certifique-se de que a carta não esteja destacada
+    card.classList.remove("left35"); // Certifique-se de que a carta não esteja destacada
+    card.classList.remove("inTrash"); // Certifique-se de que a carta não esteja destacada
+  });
+});
+
