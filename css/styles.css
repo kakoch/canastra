@@ -187,3 +187,8 @@ body {
 .left35{
     margin-left: -35px;
 }
+.current-player{
+    color: red;
+    font-size: 20px;
+    font-size: bolder;
+}
